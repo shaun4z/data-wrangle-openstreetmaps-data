@@ -1682,14 +1682,14 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="data-wrangling-with-mongodb-openstreetmaps-project">Data Wrangling with Mongodb OpenStreetMaps Project</h1>
 <h2 id="map-area">Map Area</h2>
-<p>For my map area I utilize the OpenStreetMap Export tool to get a custom area. The export tool itself has a size limit when exporting therefor I utilized the Overpass API.</p>
+<p>For my map area I utilize the OpenStreetMap Export tool to get a custom area of Johnnesburg, South Africa. The export tool itself has a size limit when exporting therefor I used the Overpass API.</p>
 <p><strong>Export Tool :</strong>http://www.openstreetmap.org/export#map=10/-26.1406/27.8339</p>
 <p><strong>Overpass API :</strong>http://overpass-api.de/api/map?bbox=27.5688,-26.4810,28.4807,-25.9333</p>
 <div class="figure">
-<img src="http://i.imgur.com/eDSJFYS.png" title="http://www.openstreetmap.org/export#map=10/-26.1406/27.8339" alt="Alt Text" /><p class="caption">Alt Text</p>
+<img src="http://i.imgur.com/eDSJFYS.png" alt="Johannesburg, South Africa" /><p class="caption">Johannesburg, South Africa</p>
 </div>
 <h2 id="problems-encountered-in-the-map">1. Problems Encountered in the Map</h2>
-<p>To assess the raw data I wrote code to look for common issues such as incorrect capitalization in the name and street keys. I then log these findings as a count per key and value respectively and combined. The code also allowed me to trace the specfic problem back to a partiular node id, which I could then use to gain additional information on a particular node. ####Count Problems Code</p>
+<p>To assess the raw data I wrote code to look for common issues such as incorrect capitalization in the name and street keys. I then log these findings as a count per key and value respectively and combined. The code also allowed me to trace the specific problem back to a particular node id, which I could then use to gain additional information on a particular node. ####Count Problems Code</p>
 <pre class="sourceCode python"><code class="sourceCode python">lower = re.<span class="dt">compile</span>(<span class="st">r&#39;^([a-z]|_)*$&#39;</span>)
 lower_colon = re.<span class="dt">compile</span>(<span class="st">r&#39;^([a-z]|_)*:([a-z]|_)*$&#39;</span>)
 problemchars = re.<span class="dt">compile</span>(<span class="st">r&#39;[=\+/&amp;&lt;&gt;;\&#39;&quot;\?%#$@\,\.\t\r\n]&#39;</span>)
@@ -1728,8 +1728,8 @@ problemchars = re.<span class="dt">compile</span>(<span class="st">r&#39;[=\+/&a
         <span class="kw">else</span>:
             add_values(oid_0,k_0,v_0)
                         </code></pre>
-<h3 id="capitlization-and-abbreviations-in-names">Capitlization and Abbreviations in Names</h3>
-<p>The above code returns a python dictionary containing keys/values, a count of the occurrences and the node id where the problem was identified. In addition to identifing incorrect capitalization there were some inconsistencies in the street name abbreviations. To fix these issues I implemented the below function to check for and replace the abbrivations in the street names with the full word and to correct the capitlization. So that <strong>queens crescent rd</strong> would be come <strong>Queens Crecent Road</strong>.</p>
+<h3 id="capitalization-and-abbreviations-in-names">Capitalization and Abbreviations in Names</h3>
+<p>The above code returns a python dictionary containing keys/values, a count of the occurrences and the node id where the problem was identified. In addition to identifying incorrect capitalization there were some inconsistencies in the street name abbreviations. To fix these issues I implemented the below function to check for and replace the abbreviations in the street names with the full word and to correct the capitalization. So that <strong>queens crescent rd</strong> would be come <strong>Queens Crecent Road</strong>.</p>
 <h4 id="fix-names-code">Fix Names Code</h4>
 <pre class="sourceCode python"><code class="sourceCode python">street_map = 
     { <span class="st">&quot;st&quot;</span>: <span class="st">&quot; Street&quot;</span>,
@@ -1756,8 +1756,8 @@ problemchars = re.<span class="dt">compile</span>(<span class="st">r&#39;[=\+/&a
         <span class="kw">return</span> name,<span class="ot">True</span>
     <span class="kw">else</span>:
         <span class="kw">return</span> name,<span class="ot">False</span></code></pre>
-<h3 id="inconsistancy-in-phone-number-format">Inconsistancy in Phone Number Format</h3>
-<p>To gain better understanding of the data I spot checked some of nodes in the problem list on the OpenStreetMaps Site. During this I noticed inconsistencies with the phone number format. I descided to search the OpenStreetMaps wiki for more information on the format standard and found that quite afew phone numbers deviated from the suggested format. I use the below function to correct the format. - Wiki : (https://wiki.openstreetmap.org/wiki/Key:phone)</p>
+<h3 id="inconsistencies-in-phone-number-format">Inconsistencies in Phone Number Format</h3>
+<p>To gain better understanding of the data I spot checked some of nodes in the problem list on the OpenStreetMaps Site. During this I noticed inconsistencies with the phone number format. I decided to search the OpenStreetMaps wiki for more information on the format standard and found that quite a few phone numbers deviated from the suggested format. I use the below function to correct the format.</p>
 <h4 id="phone-correction-code">Phone Correction Code</h4>
 <pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> update_phone(phone):
     old_phone = phone
@@ -1774,85 +1774,96 @@ problemchars = re.<span class="dt">compile</span>(<span class="st">r&#39;[=\+/&a
         <span class="kw">return</span> (phone,<span class="ot">True</span>)
     <span class="kw">else</span>:
         <span class="kw">return</span> (phone,<span class="ot">False</span>)</code></pre>
+<h4 id="references">References</h4>
+<ul>
+<li>Phone Key Wiki : https://wiki.openstreetmap.org/wiki/Key:phone</li>
+</ul>
 <h2 id="data-overview">2. Data Overview</h2>
 <p>In this sections I will go into some statistics on the data and the correction made in the pervious section.</p>
-<h3 id="genarel-statistics">Genarel Statistics</h3>
+<h3 id="general-statistics">General Statistics</h3>
 <ul>
 <li><p>File Size : 130 MB</p></li>
-<li><p>Unique User : 955</p>
-<pre class="sourceCode python"><code class="sourceCode python"><span class="dt">print</span> <span class="dt">len</span>(db.distinct(<span class="st">&quot;created.user&quot;</span>))</code></pre></li>
+<li><p>Unique User : 955</p></li>
+</ul>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="dt">print</span> <span class="dt">len</span>(db.distinct(<span class="st">&quot;created.user&quot;</span>))</code></pre>
+<ul>
 <li><p>Fuel Stations : 714</p>
 <pre class="sourceCode python"><code class="sourceCode python"><span class="dt">print</span> db.find({<span class="st">&quot;amenity&quot;</span>:<span class="st">&quot;fuel&quot;</span>}).count()</code></pre></li>
 <li><p>Nodes : 749795</p>
 <pre class="sourceCode python"><code class="sourceCode python"><span class="dt">print</span> db.find({<span class="st">&#39;type&#39;</span>:<span class="st">&#39;node&#39;</span>}).count()</code></pre></li>
 <li><p>Ways : 121185</p>
-<pre class="sourceCode python"><code class="sourceCode python"><span class="dt">print</span> db.find({<span class="st">&#39;type&#39;</span>:<span class="st">&#39;way&#39;</span>}).count()</code></pre>
-<h3>Corrections per User</h3>
-<p>While correcting values I appended a boolean value to indicate, firstly if value was evaluated and secondly if it was corrected. Using this information I created a query to check who out of the top 10 user have had thier entires eveluated and who out of these users had the most corrections made. ####Relative Correction Function</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="dt">print</span> db.find({<span class="st">&#39;type&#39;</span>:<span class="st">&#39;way&#39;</span>}).count()</code></pre></li>
+</ul>
+<h3 id="corrections-per-user">Corrections per User</h3>
+<p>While correcting values I appended a boolean value to indicate, firstly if value was evaluated and secondly if it was corrected. Using this information I created a query to check who out of the top 10 user have had their entries evaluated and who out of these users had the most corrections made.</p>
+<h4 id="relative-corrections-function">Relative Corrections Function</h4>
 <pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> read_count(_id,data):
-<span class="kw">for</span> u in data:
-    <span class="kw">if</span> u[<span class="st">&#39;_id&#39;</span>] == _id :
-        <span class="kw">if</span> u[<span class="st">&#39;count&#39;</span>] != <span class="ot">None</span>:
-            <span class="kw">return</span> u[<span class="st">&#39;count&#39;</span>]
-        <span class="kw">else</span>:
-            <span class="kw">return</span> <span class="dv">0</span>
+    <span class="kw">for</span> u in data:
+        <span class="kw">if</span> u[<span class="st">&#39;_id&#39;</span>] == _id :
+            <span class="kw">if</span> u[<span class="st">&#39;count&#39;</span>] != <span class="ot">None</span>:
+                <span class="kw">return</span> u[<span class="st">&#39;count&#39;</span>]
+            <span class="kw">else</span>:
+                <span class="kw">return</span> <span class="dv">0</span>
 <span class="co">&#39;&#39;&#39;Get top X users, who have had values assessed&#39;&#39;&#39;</span>        
 <span class="kw">def</span> get_top_corrections(field,limit):
-top_users = <span class="ot">None</span>
-true_users  = <span class="ot">None</span>
-top_users = db.aggregate([
-    {
-        <span class="st">&#39;$match&#39;</span>:{field:{<span class="st">&#39;$in&#39;</span>:[<span class="ot">True</span>,<span class="ot">False</span>]}}
-    },
-    {
-        <span class="st">&#39;$group&#39;</span>:{<span class="st">&#39;_id&#39;</span>:<span class="st">&#39;$created.user&#39;</span>,<span class="st">&#39;count&#39;</span>:{<span class="st">&#39;$sum&#39;</span>:<span class="dv">1</span>}}
-    },
-    {
-        <span class="st">&#39;$sort&#39;</span>:{<span class="st">&#39;count&#39;</span>:-<span class="dv">1</span>}
-    },
-    {
-        <span class="st">&#39;$limit&#39;</span>:limit
-    },
-])
-<span class="co">&#39;&#39;&#39;Out of the top user get a list of users who have had thier values updated&#39;&#39;&#39;</span>
-true_users = db.aggregate([
-    {
-        <span class="st">&#39;$match&#39;</span>:{
-            <span class="st">&#39;created.user&#39;</span>:{<span class="st">&#39;$in&#39;</span>:<span class="dt">map</span>(<span class="kw">lambda</span> user : user[<span class="st">&#39;_id&#39;</span>], top_users[<span class="st">&#39;result&#39;</span>])},
-            field:<span class="ot">True</span>
-        }
-    },
-    {
-        <span class="st">&#39;$group&#39;</span>:{
-            <span class="st">&#39;_id&#39;</span>:<span class="st">&#39;$created.user&#39;</span>,<span class="st">&#39;count&#39;</span>:{<span class="st">&#39;$sum&#39;</span>:<span class="dv">1</span>}
-        }
-    }
-])
-<span class="co">&#39;&#39;&#39;Out of the users whos values have been corrected. What porportaion of the total have been corrected&#39;&#39;&#39;</span>
-<span class="kw">return</span>  <span class="dt">sorted</span>(
-            <span class="dt">list</span>(
-                <span class="dt">map</span>(
-                    <span class="kw">lambda</span> user : [
-                        user[<span class="dv">0</span>],
-                        <span class="dt">float</span>(user[<span class="dv">1</span>]),
-                        <span class="dt">float</span>(user[<span class="dv">2</span>]),
-                        <span class="dt">round</span>(<span class="dt">float</span>(user[<span class="dv">2</span>])/<span class="dt">float</span>(user[<span class="dv">1</span>]),<span class="dv">2</span>)
-                    ]
-                    ,<span class="dt">map</span>(
-                        <span class="kw">lambda</span> user : [
-                            user[<span class="st">&#39;_id&#39;</span>],
-                            read_count(user[<span class="st">&#39;_id&#39;</span>],top_users[<span class="st">&#39;result&#39;</span>]),
-                            user[<span class="st">&#39;count&#39;</span>],
+    top_users = <span class="ot">None</span>
+    true_users  = <span class="ot">None</span>
+    top_users = db.aggregate([
+        {
+            <span class="st">&#39;$match&#39;</span>:{field:{<span class="st">&#39;$in&#39;</span>:[<span class="ot">True</span>,<span class="ot">False</span>]}}
+        },
+        {
+            <span class="st">&#39;$group&#39;</span>:{<span class="st">&#39;_id&#39;</span>:<span class="st">&#39;$created.user&#39;</span>,<span class="st">&#39;count&#39;</span>:{<span class="st">&#39;$sum&#39;</span>:<span class="dv">1</span>}}
+        },
+        {
+            <span class="st">&#39;$sort&#39;</span>:{<span class="st">&#39;count&#39;</span>:-<span class="dv">1</span>}
+        },
+        {
+            <span class="st">&#39;$limit&#39;</span>:limit
+        },
+    ])
 
-                        ],
-                        true_users[<span class="st">&#39;result&#39;</span>]
+    true_users = db.aggregate([
+        {
+            <span class="st">&#39;$match&#39;</span>:{
+                <span class="st">&#39;created.user&#39;</span>:{<span class="st">&#39;$in&#39;</span>:<span class="dt">map</span>(<span class="kw">lambda</span> user : user[<span class="st">&#39;_id&#39;</span>], top_users[<span class="st">&#39;result&#39;</span>])},
+                field:<span class="ot">True</span>
+            }
+        },
+        {
+            <span class="st">&#39;$group&#39;</span>:{
+                <span class="st">&#39;_id&#39;</span>:<span class="st">&#39;$created.user&#39;</span>,<span class="st">&#39;count&#39;</span>:{<span class="st">&#39;$sum&#39;</span>:<span class="dv">1</span>}
+            }
+        }
+    ])
+<span class="co">&#39;&#39;&#39;Out of the users whos values have been corrected. What porportaion of the total have been corrected&#39;&#39;&#39;</span>
+    <span class="kw">return</span>  <span class="dt">sorted</span>(
+                <span class="dt">list</span>(
+                    <span class="dt">map</span>(
+                        <span class="kw">lambda</span> user : [
+                            user[<span class="dv">0</span>],
+                            <span class="dt">float</span>(user[<span class="dv">1</span>]),
+                            <span class="dt">float</span>(user[<span class="dv">2</span>]),
+                            <span class="dt">round</span>(<span class="dt">float</span>(user[<span class="dv">2</span>])/<span class="dt">float</span>(user[<span class="dv">1</span>]),<span class="dv">2</span>)
+                        ]
+                        ,<span class="dt">map</span>(
+                            <span class="kw">lambda</span> user : [
+                                user[<span class="st">&#39;_id&#39;</span>],
+                                read_count(user[<span class="st">&#39;_id&#39;</span>],top_users[<span class="st">&#39;result&#39;</span>]),
+                                user[<span class="st">&#39;count&#39;</span>],
+
+                            ],
+                            true_users[<span class="st">&#39;result&#39;</span>]
+                        )
                     )
-                )
-            ),
-            key = <span class="kw">lambda</span> k : k[<span class="dv">3</span>]
-        )</code></pre>
-<h4>Results</h4>
-<p>Running this for query for changes made to the street,name and phone keys. These are the results sorted by highest proportion of updates.</p></li>
+                ),
+                key = <span class="kw">lambda</span> k : k[<span class="dv">3</span>]
+            )</code></pre>
+<h4 id="function-call">Function Call</h4>
+<pre class="sourceCode Python"><code class="sourceCode python"><span class="dt">map</span>(<span class="kw">lambda</span> x : <span class="st">&#39;User:</span><span class="ot">{0}</span><span class="st"> Total:</span><span class="ot">{1}</span><span class="st"> Corrected:</span><span class="ot">{2}</span><span class="st"> Ratio:</span><span class="ot">{3}</span><span class="st">&#39;</span>.<span class="dt">format</span>(x[<span class="dv">0</span>],x[<span class="dv">1</span>],x[<span class="dv">2</span>],x[<span class="dv">3</span>]),get_top_corrections(<span class="st">&#39;name&#39;</span>,<span class="dv">10</span>))</code></pre>
+<h4 id="results">Results</h4>
+<p>Running this for query for changes made to the street,name and phone keys. These are the results sorted by highest proportion of updates.</p>
+<ul>
 <li><p><strong>Name</strong></p>
 <p>'User:CharlizeFerreira Total:783.0 Corrected:139.0 Ratio:0.18'</p>
 <p>'User:SuneMomsen Total:785.0 Corrected:124.0 Ratio:0.16'</p>
@@ -1881,16 +1892,24 @@ true_users = db.aggregate([
 <p>'User:unbeZAhlbar Total:4.0 Corrected:2.0 Ratio:0.5'</p>
 <p>'User:airopixel Total:17.0 Corrected:1.0 Ratio:0.06'</p></li>
 </ul>
-<h4 id="function-call">Function Call</h4>
-<pre class="sourceCode Python"><code class="sourceCode python"><span class="dt">map</span>(<span class="kw">lambda</span> x : <span class="st">&#39;User:</span><span class="ot">{0}</span><span class="st"> Total:</span><span class="ot">{1}</span><span class="st"> Corrected:</span><span class="ot">{2}</span><span class="st"> Ratio:</span><span class="ot">{3}</span><span class="st">&#39;</span>.<span class="dt">format</span>(x[<span class="dv">0</span>],x[<span class="dv">1</span>],x[<span class="dv">2</span>],x[<span class="dv">3</span>]),get_top_corrections(<span class="st">&#39;name&#39;</span>,<span class="dv">10</span>))</code></pre>
-<h2 id="additional-ideas">3.Additional Ideas</h2>
-<h3 id="scrap-company-websitess.">Scrap company websitess.</h3>
-<p>Some company websites provide GPS coordinates for thier branches. One could use that information to automaticly update OpenstreetMaps with infomration about the branch's operating hours, phone numbers and so on. ###Non standard/ Out of data Tags. I periodically noticed some tags that didnt agree with tags from similar nodes. After checking the wiki page for these tags. I found that some have progressively been replaced by somthing more practial. In many cases it would just be a question of reformating the outdate tag.</p>
+<h2 id="additional-ideas">3. Additional Ideas</h2>
+<h3 id="scrap-company-websites.">Scrap company websites.</h3>
+<p>Some companies provide GPS coordinates for thier branches on their websites. One could use that information to automaticly update OSM with infomration about the branch's operating hours, phone numbers and so on. For a large company with many branches, this would imporve the exsisting dataset substancially. Lets look at an example of how this might be impimented. First National Bank is on of the largest banks in South Africa. Using their website's branch locator to get the GPS coordinates and other information. The HTML could be parsed and fomated in such a way that we could pass it back to the OSM Overpass API to check for preexsisting nodes. At this point we would make a disition whether to update an exsisting node or insert a new one.</p>
+<h4 id="challenges">Challenges</h4>
+<ul>
+<li><p>Website Foramt, website formats are genarilly out of our contorl. This is an issues because changes to the format may render the scrapping program useless.</p></li>
+<li><p>Complexity, the complexity involved in writing a scrapping program can be very time consuming and it might be more efficent for someeone to manuelly capture the data.</p></li>
+<li><p>Duplicate nodes, When searching OpenStreetMap using the GPS conrdiates in the branch locator. I notice that there were small variation in conrdiates of the pre exsisting node in OSM and those of the branch on the company website. Provided that the node in OSM is part of some larger entity like a shoping centre or building. One could use this to limit the search for per exsisting nodes.</p></li>
+</ul>
+<h4 id="references-1">References</h4>
+<ul>
+<li>FNB Branch Locator : https://www.fnb.co.za/locators/atm-locator.html</li>
+<li>Overpass API Documenation : http://overpass-api.de/command_line.html</li>
+<li>Pre Existing Node : http://www.openstreetmap.org/#map=18/-25.67116/28.11049</li>
+</ul>
 </div>
 </div>
 </div>
-                
-                
     </div>
   </div>
 </body>
