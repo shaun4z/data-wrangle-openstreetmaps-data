@@ -1,1 +1,6 @@
-N/A
+Export Tool :http://www.openstreetmap.org/export#map=10/-26.1406/27.8339
+Overpass API :http://overpass-api.de/api/map?bbox=27.5688,-26.4810,28.4807,-25.9333
+Phone Key Wiki : https://wiki.openstreetmap.org/wiki/Key:phone
+FNB Branch Locator : https://www.fnb.co.za/locators/atm-locator.html
+Overpass API Documenation : http://overpass-api.de/command_line.html
+Pre Existing Node : http://www.openstreetmap.org/#map=18/-25.67116/28.11049
